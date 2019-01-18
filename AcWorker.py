@@ -8,7 +8,7 @@ from hyper_parameters import *
 
 class Worker(object):
     '''
-    Class: Worker of AcNet work [job: def work()] in parallel  asdf
+    Class: Worker of AcNet work [job: def work()] in parallel
     '''
     def __init__(self, name, globalAC):
         '''

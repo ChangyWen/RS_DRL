@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from read_data import *
-from global_parameters import *
+from global_parameters import GRID_NUMS
 '''
     generate fare model from grid to grid according to the NYC dataset
 '''

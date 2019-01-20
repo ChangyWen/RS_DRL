@@ -54,7 +54,7 @@ def read_raw_data(file_name):
     data.drop(['tpep_pickup_datetime','tpep_dropoff_datetime'], axis=1, inplace=True)
     print('here2')
     data.to_csv('trip_data/filtered_yellow_tripdata_2018-06.csv', sep = ',', header = True, index = False)
-
+    inputfile.close()
 '''
     data: DataFrame
     'day',
@@ -111,6 +111,7 @@ def read_filtered_data(file_name):
         except StopIteration:
             loop = False
     data = pd.concat(chunks, ignore_index = True)
+    inputfile.close()
     return data
 
 '''
@@ -159,6 +160,7 @@ def read_request_data(file_name):
         except StopIteration:
             loop = False
     data = pd.concat(chunks, ignore_index = True)
+    inputfile.close()
     return data
 
 '''

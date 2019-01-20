@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
+
 class RideSharing_Env(object):
     '''
     Class: The environment of ride-sharing;
             Interact with A3C learning;
     '''
     def __init__(self):
+        '''
+        initialize the vehicles, orders data into variables
+        '''
+
         pass
 
     def step(self, action = None):
@@ -16,6 +22,7 @@ class RideSharing_Env(object):
             -> state_: the next state after action
             -> reward: the immediate reward of taking action
             -> done: flag, true if state_ = terminal and false otherwise
+            -> info: information needed
         '''
         reward = 0
         state_ = None

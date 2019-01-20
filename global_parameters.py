@@ -14,7 +14,7 @@ GLOBAL_NET_SCOPE = 'Global_Net'
 ### A_BOUND = [low, high] ###
 A_BOUND = []
 GRID_NUMS = 265
-VEHICLES_NUMS = 10,000 # 13,586
+VEHICLES_NUMS = 10000 # 13,586
 
 global_dict = {'SESS':None,
                'OPT_A':None,
@@ -25,6 +25,7 @@ global_dict = {'SESS':None,
                'COORD':None,
                'FARE':None,
                'DISTANCE':None,
+               'VEHICLE':None,
                'TRAVEL_TIME':None,
                }
 

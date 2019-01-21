@@ -14,19 +14,17 @@ GLOBAL_NET_SCOPE = 'Global_Net'
 ### A_BOUND = [low, high] ###
 A_BOUND = []
 GRID_NUMS = 265
+REQUEST_NUMS = 80000
 VEHICLES_NUMS = 10000 # 13,586
 
 global_dict = {'SESS':None,
                'OPT_A':None,
                'OPT_C':None,
-               'REQUEST':None,
                'GlOBAL_RUNNING_R':[],
                'GLOBAL_EP':0,
                'COORD':None,
-               'FARE':None,
-               'DISTANCE':None,
-               'VEHICLE':None,
-               'TRAVEL_TIME':None,
+               'DATA':None,
+               'REQUESTS':None,
                }
 
 def set_value(name, value):

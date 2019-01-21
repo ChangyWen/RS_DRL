@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from hyper_parameters import *
 from global_parameters import *
-from prob_act_mapping import KM_mapping
+
 class AcNet(object):
     '''
     Class: A3C network
@@ -103,7 +103,8 @@ class AcNet(object):
         :return: action
         '''
         prob_weights = self.SESS.run(self.a_prob, feed_dict={self.s: s})
-        return KM_mapping(prob_weights)
+        return prob_weights
+        # return KM_mapping(prob_weights)
 
     def pull_global(self):
         '''

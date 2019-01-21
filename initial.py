@@ -59,7 +59,7 @@ def initialize():
         for i in range(len(vehicle)):
             vehicle_ins = Vehicle(v_id=vehicle.loc[i,'vehicle_ID'],
                                   location=vehicle.loc[i, 'start_loc'],
-                                  time=0,
+                                  start_time=0,
                                   stop_time=vehicle.loc[i, 'stop_time'])
             VEHICLES.append(vehicle_ins)
     return fare, distance, travel_time, request, VEHICLES

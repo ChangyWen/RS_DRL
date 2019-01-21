@@ -10,7 +10,7 @@ class Request(object):
         self.count = count
         self.served = 0
         self.pu_t = 0
-        self.delay_t = 0
+        self.wait_t = 0
         self.appear_slot = time
 
 class Vehicle(object):
@@ -22,10 +22,13 @@ class Vehicle(object):
         self.cap = 4
         self.load = 0
         self.serving = 0
-
         self.picked_up = []
+
         self.route = []
         self.passed_route = []
         self.violation_time = 0
         self.drop_off_slot = []
+
+    def update(self):
+        pass # ?????
 

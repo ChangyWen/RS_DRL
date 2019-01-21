@@ -4,6 +4,7 @@
 import initial
 import random
 from global_parameters import *
+from prob_act_mapping import KM_mapping
 
 class RideSharing_Env(object):
     '''
@@ -19,6 +20,8 @@ class RideSharing_Env(object):
         # self.request = None
         self.vehicle = []
         self.day = 0
+        self.time = 0
+        self.request_selected = []
         self.REQUESTS = get_value('REQUESTS')
 
     def step(self, action = None):
@@ -30,9 +33,53 @@ class RideSharing_Env(object):
             -> done: flag, true if state_ = terminal and false otherwise
             -> info: information needed
         '''
-        reward = 0
-        state_ = None
-        done = False
+        final_action, reward = KM_mapping(action)
+        for ve, re in final_action:
+            self.VEHICLES[ve].picked_up.append(self.request_selected[re])
+            self.VEHICLES[ve].load += self.REQUESTS[self.request_selected[re]].count
+            self.REQUESTS[self.request_selected[re]].served = 1
+            self.VEHICLES[ve].update() # ????
+        self.request_selected = []
+        request_state = []
+        vehicle_state = []
+        self.time += 1
+        for grid in self.request_all[self.day][self.time].keys():
+            self.request_selected += self.request_all[self.day][self.time][grid]
+        if self.day > 1 and self.time < 30:
+            for grid in self.request_all[self.day-1].keys():
+                for time in range(1440 + self.time - 30, 1440):
+                    for grid in self.request_all[self.day-1][time].keys():
+                        self.request_selected += self.request_all[self.day-1][time][grid]
+        else:
+            for grid in self.request_all[self.day].keys():
+                for time in range(self.time - 30, self.time):
+                    for grid in self.request_all[self.day-1][time].keys():
+                        self.request_selected += self.request_all[self.day-1][time][grid]
+        if len(self.request_selected) > REQUEST_NUMS:
+            self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
+        else:
+            self.request_selected += ([-1] * REQUEST_NUMS - len(self.request_selected))
+        for index in range(self.request_selected):
+            if index != -1:
+                request_state += [self.REQUESTS[index].origin,
+                                  self.REQUESTS[index].destination,
+                                  self.REQUESTS[index].count]
+            else:
+                request_state += [0, 0, 0]
+        '''
+            select N vehicles, vehicle_state consider the next grid the car going to ???
+        '''
+        for i in range(len(self.VEHICLES)):
+            if (self.VEHICLES[i].stop_time < self.VEHICLES[i].start_time and self.VEHICLES[i].stop_time >= self.time) \
+                    or (self.VEHICLES[i].start_time <= self.time and self.VEHICLES[i].stop_time >= self.time):
+                if self.VEHICLES[i].load < self.VEHICLES[i].cap:
+                    self.VEHICLES[i].serving = 1
+                    self.vehicle.append(i)
+                    vehicle_state += [self.VEHICLES[i].location, self.VEHICLES[i].cap - self.VEHICLES[i].load]
+            else:
+                vehicle_state += [0, 0]
+        state_ = np.concatenate(([self.day], [0], request_state, vehicle_state))
+        done = False if self.time < 1439 else True
         info = None
         return state_, reward, done, info
 
@@ -43,24 +90,24 @@ class RideSharing_Env(object):
             -> state: an new initial state
         '''
         self.day = day
-        request_selected = []
+        self.request_selected = []
         request_state = []
         vehicle_state = []
         '''
             select M requests
         '''
         for grid in self.request_all[day][0].keys():
-            request_selected += self.request_all[day][0][grid]
-        if day > 1:
+            self.request_selected += self.request_all[day][0][grid]
+        if self.day > 1:
             for grid in self.request_all[day-1].keys():
                 for time in range(1410, 1440):
                     for grid in self.request_all[day-1][time].keys():
-                        request_selected += self.request_all[day-1][time][grid]
-        if len(request_selected) > REQUEST_NUMS:
-            request_selected = random.sample(request_selected, REQUEST_NUMS)
+                        self.request_selected += self.request_all[day-1][time][grid]
+        if len(self.request_selected) > REQUEST_NUMS:
+            self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
         else:
-            request_selected += ([-1] * REQUEST_NUMS - len(request_selected))
-        for index in range(request_selected):
+            self.request_selected += ([-1] * REQUEST_NUMS - len(self.request_selected))
+        for index in range(self.request_selected):
             if index != -1:
                 request_state += [self.REQUESTS[index].origin,
                                   self.REQUESTS[index].destination,
@@ -68,12 +115,15 @@ class RideSharing_Env(object):
             else:
                 request_state += [0, 0, 0]
         '''
-            select N vehicles
+            select N vehicles, vehicle_state consider the next grid the car going to ???
         '''
         for i in range(len(self.VEHICLES)):
             if self.VEHICLES[i].stop_time < self.VEHICLES[i].start_time or self.VEHICLES[i].start_time == 0:
-                self.VEHICLES[i].serving = 1
-                self.vehicle.append(i)
-                vehicle_state += [self.VEHICLES[i].location, self.VEHICLES[i].cap - self.VEHICLES[i].load]
+                if self.VEHICLES[i].load < self.VEHICLES[i].cap:
+                    self.VEHICLES[i].serving = 1
+                    self.vehicle.append(i)
+                    vehicle_state += [self.VEHICLES[i].location, self.VEHICLES[i].cap - self.VEHICLES[i].load]
+            else:
+                vehicle_state += [0, 0]
         state = np.concatenate(([self.day], [0], request_state, vehicle_state))
         return state

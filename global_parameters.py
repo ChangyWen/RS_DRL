@@ -25,6 +25,7 @@ global_dict = {'SESS':None,
                'COORD':None,
                'DATA':None,
                'REQUESTS':None,
+               'VEHICLES':None,
                'shortest_dis':None,
                'predecessors':None,
                }

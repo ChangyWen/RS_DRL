@@ -45,14 +45,16 @@ class Vehicle(object):
         for re in temp_onboard:
             if REQUESTS[re].destination == self.location:
                 self.onboard.remove(re)
+                self.load -= REQUESTS[re].count
         temp_re_to_pick = copy.copy(self.re_to_pick)
         for re in temp_re_to_pick:
             if REQUESTS[re].origin == self.location:
                 self.onboard.append(re)
                 self.re_to_pick.remove(re)
+                self.load += REQUESTS[re].count
         # ??? pickup
 
-    def update(self):
+    def update_route(self):
         self.re_to_pick = list(set(self.pick_up) ^ set(self.onboard))
         isEmpty = True if len(self.onboard) == 0 else False
         self.route = plan_route(self.location, self.re_to_pick, isEmpty, self.onboard)

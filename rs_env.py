@@ -16,7 +16,7 @@ class RideSharing_Env(object):
         '''
         initialize the vehicles,...
         '''
-        self.fare, self.distance, self.travel_time, self.request_all, self.VEHICLES = initial.initialize()
+        self.fare, self.distance, self.travel_time, self.request_all = initial.initialize()
         # self.request = None
         set_value('travel_time', self.travel_time)
         self.vehicle = []
@@ -24,6 +24,7 @@ class RideSharing_Env(object):
         self.time = 0
         self.request_selected = []
         self.REQUESTS = get_value('REQUESTS')
+        self.VEHICLES = get_value('VEHICLES')
 
     def step(self, action = None):
         '''
@@ -34,7 +35,7 @@ class RideSharing_Env(object):
             -> done: flag, true if state_ = terminal and false otherwise
             -> info: information needed
         '''
-        final_action, reward = KM_mapping(action)
+        final_action, reward = KM_mapping(action, self.request_selected, self.vehicle)
         for ve, re in final_action:
             self.VEHICLES[ve].pick_up.append(self.request_selected[re])
             re_day = self.REQUESTS[self.request_selected[re]].day
@@ -43,7 +44,7 @@ class RideSharing_Env(object):
             self.request_all[re_day][re_time][re_grid].remove(self.request_selected[re])
             self.VEHICLES[ve].load += self.REQUESTS[self.request_selected[re]].count
             self.REQUESTS[self.request_selected[re]].served = 1
-            self.VEHICLES[ve].update() # ????
+            self.VEHICLES[ve].update_route()
         self.request_selected = []
         request_state = []
         vehicle_state = []

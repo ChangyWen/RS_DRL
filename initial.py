@@ -66,6 +66,7 @@ def initialize():
                                   start_time=0,
                                   stop_time=vehicle.loc[i, 'stop_time'])
             VEHICLES.append(vehicle_ins)
-    return fare, distance, travel_time, request, VEHICLES
+        set_value('VEHICLES', VEHICLES)
+    return fare, distance, travel_time, request
     ### Reduce to N and M
 # initialize()

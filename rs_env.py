@@ -18,6 +18,7 @@ class RideSharing_Env(object):
         '''
         self.fare, self.distance, self.travel_time, self.request_all, self.VEHICLES = initial.initialize()
         # self.request = None
+        set_value('travel_time', self.travel_time)
         self.vehicle = []
         self.day = 0
         self.time = 0
@@ -35,7 +36,11 @@ class RideSharing_Env(object):
         '''
         final_action, reward = KM_mapping(action)
         for ve, re in final_action:
-            self.VEHICLES[ve].picked_up.append(self.request_selected[re])
+            self.VEHICLES[ve].pick_up.append(self.request_selected[re])
+            re_day = self.REQUESTS[self.request_selected[re]].day
+            re_time = self.REQUESTS[self.request_selected[re]].time
+            re_grid = self.REQUESTS[self.request_selected[re]].origin
+            self.request_all[re_day][re_time][re_grid].remove(self.request_selected[re])
             self.VEHICLES[ve].load += self.REQUESTS[self.request_selected[re]].count
             self.REQUESTS[self.request_selected[re]].served = 1
             self.VEHICLES[ve].update() # ????

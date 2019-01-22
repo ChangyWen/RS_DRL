@@ -5,6 +5,7 @@ from global_parameters import *
 import pickle
 import pandas as pd
 from util import *
+from floyd_path import *
 def initialize():
     '''
     initialize fare, distance, travel_time model
@@ -18,6 +19,9 @@ def initialize():
         distance = np.loadtxt(fname=distance_file,
                               delimiter=",",
                               skiprows=0)
+        shortest_dis, predecessors = floyd_warshall(distance)
+        set_value('shortest_dis', shortest_dis)
+        set_value('predecessors', predecessors)
     with open('models/travel_time_model/driving_time_model.csv') as travel_time_file:
         travel_time = np.loadtxt(fname=travel_time_file,
                                  delimiter=",",

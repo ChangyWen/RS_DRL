@@ -25,6 +25,8 @@ global_dict = {'SESS':None,
                'COORD':None,
                'DATA':None,
                'REQUESTS':None,
+               'shortest_dis':None,
+               'predecessors':None,
                }
 
 def set_value(name, value):

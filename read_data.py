@@ -38,7 +38,8 @@ def read_raw_data(file_name):
         except StopIteration:
             loop = False
     data = pd.concat(chunks, ignore_index = True)
-    data = data[data['trip_distance']>0]
+    data = data[(data['PULocationID'] != data['DOLocationID']) and data['trip_distance']>0]
+    # data = data[data['trip_distance']>0]
     print('here1')
     data['hour'] = \
         data.apply(lambda x: int(x['tpep_pickup_datetime'].hour), axis=1)

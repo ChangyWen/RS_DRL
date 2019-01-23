@@ -39,7 +39,7 @@ class Worker(object):
                 ep_r += r
                 buffer_s.append(s)
                 buffer_a.append(a)
-                buffer_r.append(r)  ### whether r needs normalization or not ??
+                buffer_r.append(r)
                 if total_step % UPDATE_GLOBAL_ITER == 0 or done:
                     if done:
                         v_s_ = 0 ### termial state

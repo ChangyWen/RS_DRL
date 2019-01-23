@@ -15,6 +15,7 @@ def initialize():
         fare = np.loadtxt(fname=fare_file,
                           delimiter=",",
                       skiprows=0,)
+        set_value('fare', fare)
     with open('models/distance_model/distance_model.csv', 'rb') as distance_file:
         distance = np.loadtxt(fname=distance_file,
                               delimiter=",",
@@ -27,6 +28,7 @@ def initialize():
                                  delimiter=",",
                                  skiprows=0)
         travel_time = travel_time.reshape([24, GRID_NUMS + 1, GRID_NUMS + 1])
+        set_value('travel_time', travel_time)
     with open('request_dict/request_dict.pkl', 'rb') as request_file:
         request = pickle.load(request_file)
         REQUESTS = {}
@@ -67,6 +69,6 @@ def initialize():
                                   stop_time=vehicle.loc[i, 'stop_time'])
             VEHICLES.append(vehicle_ins)
         set_value('VEHICLES', VEHICLES)
-    return fare, distance, travel_time, request
+    return request
     ### Reduce to N and M
 # initialize()

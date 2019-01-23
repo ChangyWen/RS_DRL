@@ -13,8 +13,7 @@ class Request(object):
         self.count = count
         self.served = 0
         self.pu_t = 0
-        self.wait_t = 0
-        self.appear_slot = time
+        self.appear_time = time
 
 class Vehicle(object):
     def __init__(self, v_id, location: int, start_time: int, stop_time: int):
@@ -50,9 +49,9 @@ class Vehicle(object):
         for re in temp_re_to_pick:
             if REQUESTS[re].origin == self.location:
                 self.onboard.append(re)
+                REQUESTS[re].pu_t = current_time
                 self.re_to_pick.remove(re)
                 self.load += REQUESTS[re].count
-        # ??? pickup
 
     def update_route(self):
         self.re_to_pick = list(set(self.pick_up) ^ set(self.onboard))

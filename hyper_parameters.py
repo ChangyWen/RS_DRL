@@ -3,6 +3,7 @@
 
 import multiprocessing
 import tensorflow as tf
+from global_parameters import VEHICLES_NUMS, REQUEST_NUMS
 
 N_WORKERS = multiprocessing.cpu_count()
 
@@ -34,8 +35,8 @@ LR_A = 0.0001
 LR_C = 0.001
 
 ### dimension of state and action ###
-N_S = 0
-N_A = 0
+N_S = REQUEST_NUMS * 3 + VEHICLES_NUMS * 2 + 2
+N_A = VEHICLES_NUMS * REQUEST_NUMS
 
 ### initialization of weights in network ###
 W_INIT = tf.random_normal_initializer(0., .1)

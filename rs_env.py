@@ -16,9 +16,8 @@ class RideSharing_Env(object):
         '''
         initialize the vehicles,...
         '''
-        self.fare, self.distance, self.travel_time, self.request_all = initial.initialize()
+        self.request_all = initial.initialize()
         # self.request = None
-        set_value('travel_time', self.travel_time)
         self.vehicle = []
         self.day = 0
         self.time = 0
@@ -35,7 +34,7 @@ class RideSharing_Env(object):
             -> done: flag, true if state_ = terminal and false otherwise
             -> info: information needed
         '''
-        final_action, reward = KM_mapping(action, self.request_selected, self.vehicle)
+        final_action, reward = KM_mapping(action, self.request_selected, self.vehicle, self.time)
         for ve, re in final_action:
             self.VEHICLES[ve].pick_up.append(self.request_selected[re])
             re_day = self.REQUESTS[self.request_selected[re]].day
@@ -49,6 +48,10 @@ class RideSharing_Env(object):
         request_state = []
         vehicle_state = []
         self.time += 1
+        if self.time == 1440:
+            done = True
+            info = None
+            return [0] * (REQUEST_NUMS * 3), reward, done, info
         for grid in self.request_all[self.day][self.time].keys():
             self.request_selected += self.request_all[self.day][self.time][grid]
         if self.day > 1 and self.time < 30:
@@ -96,6 +99,7 @@ class RideSharing_Env(object):
             -> state: an new initial state
         '''
         self.day = day
+        self.time = 0
         self.request_selected = []
         request_state = []
         vehicle_state = []

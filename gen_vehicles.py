@@ -26,4 +26,4 @@ def gen_vehicles():
     data = cal_vehicles()
     vehicles_to_file(data, 'vehicles_df/vehicles_df.csv')
 
-gen_vehicles()
+# gen_vehicles()

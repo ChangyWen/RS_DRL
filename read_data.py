@@ -31,14 +31,14 @@ def read_raw_data(file_name):
     while loop:
         try:
             i += 1
-            if i > 2:
+            if i > 3:
                 break
             chunk = data.get_chunk(chunkSize)
             chunks.append(chunk)
         except StopIteration:
             loop = False
     data = pd.concat(chunks, ignore_index = True)
-    data = data[(data['PULocationID'] != data['DOLocationID']) and data['trip_distance']>0]
+    data = data[(data['PULocationID'] != data['DOLocationID']) & data['trip_distance']>0]
     # data = data[data['trip_distance']>0]
     print('here1')
     data['hour'] = \

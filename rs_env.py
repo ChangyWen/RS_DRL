@@ -3,6 +3,7 @@
 
 import initial
 import random
+import copy
 from global_parameters import *
 from prob_act_mapping import KM_mapping
 
@@ -22,8 +23,8 @@ class RideSharing_Env(object):
         self.day = 0
         self.time = 0
         self.request_selected = []
-        self.REQUESTS = get_value('REQUESTS')
-        self.VEHICLES = get_value('VEHICLES')
+        self.REQUESTS = copy.deepcopy(get_value('REQUESTS'))
+        self.VEHICLES = copy.deepcopy(get_value('VEHICLES'))
 
     def step(self, action = None):
         '''

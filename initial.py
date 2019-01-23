@@ -32,7 +32,7 @@ def initialize():
     with open('request_dict/request_dict.pkl', 'rb') as request_file:
         request = pickle.load(request_file)
         REQUESTS = {}
-        DATA = get_value('Data')
+        DATA = get_value('DATA')
         for key1 in request.keys():
             for key2 in request[key1].keys():
                 for key3 in request[key1][key2].keys():

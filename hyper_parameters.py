@@ -39,7 +39,7 @@ N_S = REQUEST_NUMS * 3 + VEHICLES_NUMS * 2 + 2
 N_A = VEHICLES_NUMS * REQUEST_NUMS
 
 ### initialization of weights in network ###
-W_INIT = tf.random_normal_initializer(0., .1)
+W_INIT = tf.truncated_normal_initializer(0., .1)
 
 UNIT_A = 256
 UNIT_C = 128

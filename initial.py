@@ -31,6 +31,7 @@ def initialize():
         set_value('travel_time', travel_time)
     with open('request_dict/request_dict.pkl', 'rb') as request_file:
         request = pickle.load(request_file)
+        set_value('request_all', request)
         REQUESTS = {}
         DATA = get_value('DATA')
         for key1 in request.keys():
@@ -40,7 +41,7 @@ def initialize():
                         request_ins = Request(r_id=index,
                                               day=DATA.loc[index, 'day'],
                                               time=DATA.loc[index, 'pickup_time'],
-                                              origin=DATA.loc[index, 'PULocation'],
+                                              origin=DATA.loc[index, 'PULocationID'],
                                               destination=DATA.loc[index, 'DOLocationID'],
                                               count=DATA.loc[index, 'passenger_count']
                                               )

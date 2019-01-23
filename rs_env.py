@@ -17,12 +17,12 @@ class RideSharing_Env(object):
         '''
         initialize the vehicles,...
         '''
-        self.request_all = initial.initialize()
         # self.request = None
         self.vehicle = []
         self.day = 0
         self.time = 0
         self.request_selected = []
+        self.request_all = copy.deepcopy(get_value('request_all'))
         self.REQUESTS = copy.deepcopy(get_value('REQUESTS'))
         self.VEHICLES = copy.deepcopy(get_value('VEHICLES'))
 
@@ -35,8 +35,12 @@ class RideSharing_Env(object):
             -> done: flag, true if state_ = terminal and false otherwise
             -> info: information needed
         '''
-        final_action, reward = KM_mapping(action, self.request_selected, self.vehicle, self.time)
-        for ve, re in final_action:
+        final_action, reward = KM_mapping(action, self.REQUESTS, self.VEHICLES, self.request_selected, self.vehicle, self.time)
+        a = [0] * (VEHICLES_NUMS * REQUEST_NUMS)
+        for i, j in final_action:
+            ve = self.vehicle[i]
+            re = self.request_selected[j]
+            a[i * REQUEST_NUMS + j] = 1
             self.VEHICLES[ve].pick_up.append(self.request_selected[re])
             re_day = self.REQUESTS[self.request_selected[re]].day
             re_time = self.REQUESTS[self.request_selected[re]].time
@@ -91,7 +95,7 @@ class RideSharing_Env(object):
         state_ = np.concatenate(([self.day], [0], request_state, vehicle_state))
         done = False if self.time < 1439 else True
         info = None
-        return state_, reward, done, info
+        return a, state_, reward, done, info
 
     def reset(self, day):
         '''

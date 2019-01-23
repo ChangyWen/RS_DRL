@@ -33,8 +33,8 @@ class Worker(object):
             s = self.env.reset()
             ep_r = 0 ### episode reward in local_net
             for ep_t in range(MAX_EP_STEP):
-                a = self.AC.choose_action(s)  # ???? 可以加强动作的特征
-                s_, r, done, info = self.env.step(a)
+                a_temp = self.AC.choose_action(s)  # ???? 可以加强动作的特征
+                a, s_, r, done, info = self.env.step(a_temp)
                 done = True if ep_t == MAX_EP_STEP - 1 else False
                 ep_r += r
                 buffer_s.append(s)

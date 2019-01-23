@@ -20,7 +20,7 @@ def cal_requests(data:pd.DataFrame):
     total_request = 0
     data_DTG = data.groupby(['day','pickup_time','PULocationID'])
     for key, group in data_DTG:
-        REQUEST[key[0]][key[1]][key[2]].append(group.index.tolist())
+        REQUEST[key[0]][key[1]][key[2]] += group.index.tolist()
         total_request += len(group.index.tolist())
     '''
         set |REQUESTS in every pickup slot| = REQUEST_NUMS

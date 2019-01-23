@@ -17,11 +17,13 @@ import os
 import shutil
 import threading
 import matplotlib.pyplot as plt
+import initial
 
 if __name__ == "__main__":
     DATA = read_request_data('trip_data/filtered_yellow_tripdata_2018-06.csv')
-    print(DATA.iloc[:,0].size)
     set_value('DATA', DATA)
+    request_all = initial.initialize()
+    set_value('request_all', request_all)
     with tf.device("/cpu:0"):
         set_value('OPT_A', tf.train.RMSPropOptimizer(LR_A, name='RMSProp_A'))
         set_value('OPT_C', tf.train.RMSPropOptimizer(LR_C, name='RMSProp_C'))

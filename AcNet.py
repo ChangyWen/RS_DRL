@@ -24,7 +24,7 @@ class AcNet(object):
         else:
             with tf.variable_scope(scope):
                 self.s = tf.placeholder(dtype=tf.float32, shape=[None, N_S], name='S')
-                self.a_his = tf.placeholder(dtype=tf.float32, shape=[None, N_A], name='A')
+                self.a_his = tf.placeholder(dtype=tf.int32, shape=[None, N_A], name='A')
                 self.v_target = tf.placeholder(dtype=tf.float32, shape=[None, 1], name='Vtarget')
                 self.a_prob, self.v, self.a_params, self.c_params = self._build_net(scope)
                 td = tf.subtract(self.v_target, self.v, name='TD_Error')

@@ -18,7 +18,6 @@ import threading
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    set_value('SESS', tf.Session())
     with tf.device("/cpu:0"):
         set_value('OPT_A', tf.train.RMSPropOptimizer(LR_A, name='RMSProp_A'))
         set_value('OPT_C', tf.train.RMSPropOptimizer(LR_C, name='RMSProp_C'))
@@ -28,6 +27,8 @@ if __name__ == "__main__":
             i_name = 'w_%i' % i
             workers.append(Worker(i_name, global_AC))
 
+    saver = tf.train.Saver()
+    set_value('SESS', tf.Session())
     set_value('COORD', tf.train.Coordinator())
     COORD = get_value('COORD')
     SESS = get_value('SESS')
@@ -41,11 +42,14 @@ if __name__ == "__main__":
     worker_threads = []
     for worker in workers:
         job = lambda: worker.work()
-        t = threading.Thread(traget=job)
+        t = threading.Thread(target=job)
         t.start()
         worker_threads.append(t)
     COORD.join(worker_threads)
 
+    save_path = saver.save(SESS, 'net_param/net_param.ckpt')
+
+    SESS.close()
     '''Plot to check the total moving reward'''
     GLOBAL_RUNNING_R = get_value('GLOBAL_RUNNING_R')
     plt.plot(np.arange(len(GLOBAL_RUNNING_R)), GLOBAL_RUNNING_R)

@@ -62,36 +62,49 @@ class AcNet(object):
         :return: a_prob (M * N), v, a_params, c_params
         '''
         with tf.variable_scope('actor'):
+            ### Variable
+            W_a1 = tf.Variable(tf.truncated_normal([N_S, UNIT_A], stddev=0.5), dtype=tf.float32, name='W_a1')
+            b_a1 = tf.Variable(tf.zeros([UNIT_A]), dtype=tf.float32, name='b_a1')
+            W_a2 = tf.Variable(tf.truncated_normal([UNIT_A, UNIT_A], stddev=0.5), dtype=tf.float32, name='W_a2')
+            b_a2 = tf.Variable(tf.zeros([UNIT_A]), dtype=tf.float32, name='b_a2')
+            W_prob = tf.Variable(tf.truncated_normal([UNIT_A, N_A], stddev=0.5), dtype=tf.float32, name='W_prob')
+            b_prob = tf.Variable(tf.zeros([N_A]), dtype=tf.float32, name='b_prob')
             layer_a1 = tf.layers.dense(inputs = self.s,
                                   units = UNIT_A,
-                                  activation = tf.nn.relu6,
-                                  kernel_initializer = W_INIT,
+                                  activation = tf.nn.relu6(tf.nn.bias_add(tf.matmul(self.s, W_a1),b_a1)),
+                                  kernel_initializer = None,
                                   name = 'layer_a1')
             layer_a2 = tf.layers.dense(inputs = layer_a1,
                                        units = UNIT_A,
-                                       activation = tf.nn.relu6,
-                                       kernel_initializer = W_INIT,
+                                       activation = tf.nn.relu6(tf.nn.bias_add(tf.matmul(layer_a1, W_a2),b_a2)),
+                                       kernel_initializer = None,
                                        name = 'layer_a2')
             a_prob = tf.layers.dense(inputs=layer_a2,
                                      units=N_A,   ### N_A = M*N
-                                     activation=tf.nn.tanh,   ### is tanh well-used here ???
-                                     kernel_initializer=W_INIT,
+                                     activation=tf.nn.tanh(tf.nn.bias_add(tf.matmul(layer_a2, W_prob),b_prob)),
+                                     kernel_initializer=None,
                                      name = 'a_prob')
         with tf.variable_scope('critic'):
+            W_c1 = tf.Variable(tf.truncated_normal([N_S, UNIT_C], stddev=0.2), dtype=tf.float32, name='W_c1')
+            b_c1 = tf.Variable(tf.zeros([UNIT_A]), dtype=tf.float32, name='b_c1')
+            W_c2 = tf.Variable(tf.truncated_normal([UNIT_C, UNIT_C], stddev=0.2), dtype=tf.float32, name='W_c2')
+            b_c2 = tf.Variable(tf.zeros([UNIT_A]), dtype=tf.float32, name='b_c2')
+            W_v = tf.Variable(tf.truncated_normal([UNIT_C, 1], stddev=0.2), dtype=tf.float32, name='W_v')
+            b_v = tf.Variable(tf.zeros([1]), dtype=tf.float32, name='b_v')
             layer_c1 = tf.layers.dense(inputs = self.s,
                                        units = UNIT_C,
-                                       activation = tf.nn.relu6,
-                                       kernel_initializer = W_INIT,
+                                       activation = tf.nn.relu6(tf.nn.bias_add(tf.matmul(self.s, W_c1),b_c1)),
+                                       kernel_initializer = None,
                                        name = 'layer_c1')
             layer_c2 = tf.layers.dense(inputs = layer_c1,
                                        units = UNIT_C,
-                                       activation = tf.nn.relu6,
-                                       kernel_initializer = W_INIT,
+                                       activation = tf.nn.relu6(tf.nn.bias_add(tf.matmul(layer_c1, W_c2),b_c2)),
+                                       kernel_initializer = None,
                                        name = 'layer_c2')
             v = tf.layers.dense(inputs = layer_c2,
                                 units = 1,
-                                activation = None,
-                                kernel_initializer = W_INIT,
+                                activation = tf.nn.bias_add(tf.matmul(layer_c2, W_v),b_v),
+                                kernel_initializer = None,
                                 name = 'v')
         a_params = tf.get_collection(key=tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/actor')
         c_params = tf.get_collection(key=tf.GraphKeys.TRAINABLE_VARIABLES, scope=scope + '/critic')
@@ -102,9 +115,8 @@ class AcNet(object):
         :param s: state
         :return: action
         '''
-        prob_weights = self.SESS.run(self.a_prob, feed_dict={self.s: s})
-        return prob_weights
-        # return KM_mapping(prob_weights)
+        action = self.SESS.run(self.a_prob, feed_dict={self.s: s})
+        return action
 
     def pull_global(self):
         '''

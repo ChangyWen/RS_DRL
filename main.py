@@ -21,6 +21,7 @@ import initial
 
 if __name__ == "__main__":
     DATA = read_request_data('trip_data/filtered_yellow_tripdata_2018-06.csv')
+    isTrain = True
     set_value('DATA', DATA)
     request_all = initial.initialize()
     set_value('request_all', request_all)
@@ -33,28 +34,30 @@ if __name__ == "__main__":
             i_name = 'w_%i' % i
             workers.append(Worker(i_name, global_AC))
 
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(max_to_keep=1)
     set_value('SESS', tf.Session())
     set_value('COORD', tf.train.Coordinator())
     COORD = get_value('COORD')
     SESS = get_value('SESS')
     SESS.run(tf.global_variables_initializer())
 
-    if OUTPUT_GRAPH:
-        if os.path.exists(LOG_DIR):
-            shutil.rmtree(LOG_DIR)
-        tf.summary.FileWriter(LOG_DIR, SESS.graph)
+    if isTrain:
+        if OUTPUT_GRAPH:
+            if os.path.exists(LOG_DIR):
+                shutil.rmtree(LOG_DIR)
+            tf.summary.FileWriter(LOG_DIR, SESS.graph)
 
-    worker_threads = []
-    for worker in workers:
-        job = lambda: worker.work()
-        t = threading.Thread(target=job)
-        t.start()
-        worker_threads.append(t)
-    COORD.join(worker_threads)
-
-    save_path = saver.save(SESS, 'net_param/net_param.ckpt')
-
+        worker_threads = []
+        for worker in workers:
+            job = lambda: worker.work()
+            t = threading.Thread(target=job)
+            t.start()
+            worker_threads.append(t)
+        COORD.join(worker_threads)
+        save_path = saver.save(SESS, 'net_param/net_param.ckpt')
+    else:
+        model_file = tf.train.latest_checkpoint('net_param/')
+        saver.restore(SESS, model_file)
     SESS.close()
     '''Plot to check the total moving reward'''
     GLOBAL_RUNNING_R = get_value('GLOBAL_RUNNING_R')

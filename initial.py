@@ -29,7 +29,7 @@ def initialize():
                                  skiprows=0)
         travel_time = travel_time.reshape([24, GRID_NUMS + 1, GRID_NUMS + 1])
         set_value('travel_time', travel_time)
-    with open('request_dict/request_dict.pkl', 'rb') as request_file:
+    with open('request_dict/request_dict_2018-06.pkl', 'rb') as request_file:
         request = pickle.load(request_file)
         set_value('request_all', request)
         REQUESTS = {}

@@ -27,12 +27,12 @@ def read_raw_data(file_name):
     loop = True
     chunkSize = 10000
     chunks = []
-    i = 0  ### used in test, control the data size to read
+    # i = 0  ### used in test, control the data size to read
     while loop:
         try:
-            i += 1
-            if i > 3:
-                break
+            # i += 1
+            # if i > 3:
+            #     break
             chunk = data.get_chunk(chunkSize)
             chunks.append(chunk)
         except StopIteration:
@@ -54,7 +54,8 @@ def read_raw_data(file_name):
     # data['is_Served'] = 0
     data.drop(['tpep_pickup_datetime','tpep_dropoff_datetime'], axis=1, inplace=True)
     print('here2')
-    data.to_csv('trip_data/filtered_yellow_tripdata_2018-06.csv', sep = ',', header = True, index = False)
+    data.to_csv('trip_data/filtered_yellow_tripdata_2018-01.csv', sep = ',', header = True, index = False)
+    data.to_csv('trip_data/filtered_yellow_tripdata.csv', sep = ',', header = False, index = False, mode='a')
     inputfile.close()
 '''
     data: DataFrame
@@ -101,12 +102,12 @@ def read_filtered_data(file_name):
     loop = True
     chunkSize = 10000
     chunks = []
-    i = 0  ### used in test, control the data size to read
+    # i = 0  ### used in test, control the data size to read
     while loop:
         try:
-            i += 1
-            if i > 2:
-                break
+            # i += 1
+            # if i > 2:
+            #     break
             chunk = data.get_chunk(chunkSize)
             chunks.append(chunk)
         except StopIteration:
@@ -150,12 +151,12 @@ def read_request_data(file_name):
     loop = True
     chunkSize = 10000
     chunks = []
-    i = 0  ### used in test, control the data size to read
+    # i = 0  ### used in test, control the data size to read
     while loop:
         try:
-            i += 1
-            if i > 2:
-                break
+            # i += 1
+            # if i > 2:
+            #     break
             chunk = data.get_chunk(chunkSize)
             chunks.append(chunk)
         except StopIteration:
@@ -172,5 +173,4 @@ def read_request_data(file_name):
     'PULocationID',
     'DOLocationID',
 '''
-# read_raw_data('trip_data/yellow_tripdata_2018-06.csv')
-# read_trip_data('trip_data/yellow_tripdata_2018-06.csv')  ### test
+# read_raw_data('trip_data/yellow_tripdata_2018-01.csv')

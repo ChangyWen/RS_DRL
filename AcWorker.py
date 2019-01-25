@@ -67,5 +67,6 @@ class Worker(object):
                         GLOBAL_RUNNING_R.append(ep_r)
                     else:
                         GLOBAL_RUNNING_R.append(EWA_BETA * GLOBAL_RUNNING_R[-1] + (1 - EWA_BETA) * ep_r)
+                        print(self.name, 'Ep:', GLOBAL_EP, '| Ep_r: %i' % GLOBAL_RUNNING_R[-1])
                     GLOBAL_EP += 1
                     break

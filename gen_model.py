@@ -40,5 +40,5 @@ def gen_model(data:pd.DataFrame):
     file_name.append('models/travel_time_model/driving_time_model.csv')
     model_to_file(FARE, DISTANCE, TRAVEL_TIME, file_name)
 
-# gen_model(read_filtered_data('trip_data/filtered_yellow_tripdata_2018-06.csv'))
+# gen_model(read_filtered_data('trip_data/filtered_yellow_tripdata.csv'))
 

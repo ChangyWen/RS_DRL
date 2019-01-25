@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="sftp_sribd" createEmptyFolders="true">
+    <serverData>
+      <paths name="sftp_sribd">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/A3C_RS" local="$PROJECT_DIR$" web="/A3C_RS" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

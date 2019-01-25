@@ -14,7 +14,7 @@ TIME_STEP = 5
 MAX_EP_STEP = 24 * 60 / TIME_STEP
 
 ### Maximum learning episode ###
-MAX_GLOBAL_EP = 2000
+MAX_GLOBAL_EP = 30
 
 ### The #iteration in local_net before push_operation ###
 UPDATE_GLOBAL_ITER = 10

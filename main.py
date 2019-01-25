@@ -22,8 +22,11 @@ import initial
 if __name__ == "__main__":
     DATA = read_request_data('trip_data/filtered_yellow_tripdata_2018-06.csv')
     isTrain = True
+    print(N_WORKERS)
     set_value('DATA', DATA)
+    print('point1: initialize begin')
     request_all = initial.initialize()
+    print('point2: initialize end')
     set_value('request_all', request_all)
     with tf.device("/cpu:0"):
         set_value('OPT_A', tf.train.RMSPropOptimizer(LR_A, name='RMSProp_A'))
@@ -53,10 +56,11 @@ if __name__ == "__main__":
             t = threading.Thread(target=job)
             t.start()
             worker_threads.append(t)
+        print('all worker begin')
         COORD.join(worker_threads)
-        save_path = saver.save(SESS, 'net_param/net_param.ckpt')
+        save_path = saver.save(SESS, 'net_model/net_model_01.ckpt')
     else:
-        model_file = tf.train.latest_checkpoint('net_param/')
+        model_file = tf.train.latest_checkpoint('net_model/')
         saver.restore(SESS, model_file)
     SESS.close()
     '''Plot to check the total moving reward'''
@@ -64,4 +68,5 @@ if __name__ == "__main__":
     plt.plot(np.arange(len(GLOBAL_RUNNING_R)), GLOBAL_RUNNING_R)
     plt.xlabel('Step')
     plt.ylabel('Total moving reward')
-    plt.show()
+    plt.savefig('./ver_01.pdf')
+    # plt.show()

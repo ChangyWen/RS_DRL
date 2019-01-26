@@ -23,7 +23,6 @@ class RideSharing_Env(object):
         self.time = 0
         self.request_selected = []
         self.request_all = copy.deepcopy(get_value('request_all'))
-
         self.REQUESTS = copy.deepcopy(get_value('REQUESTS'))
         self.VEHICLES = copy.deepcopy(get_value('VEHICLES'))
 
@@ -46,6 +45,10 @@ class RideSharing_Env(object):
             re_day = self.REQUESTS[self.request_selected[re]].day
             re_time = self.REQUESTS[self.request_selected[re]].time
             re_grid = self.REQUESTS[self.request_selected[re]].origin
+            if self.VEHICLES[ve].location == re_grid:
+                self.VEHICLES[ve].onboard.append(self.request_selected[re])
+                self.REQUESTS[self.request_selected[re]].pu_t = self.time
+                self.VEHICLES[ve].load += self.REQUESTS[self.request_selected[re]].count
             self.request_all[re_day][re_time][re_grid].remove(self.request_selected[re])
             self.VEHICLES[ve].load += self.REQUESTS[self.request_selected[re]].count
             self.REQUESTS[self.request_selected[re]].served = 1
@@ -77,8 +80,8 @@ class RideSharing_Env(object):
         if len(self.request_selected) > REQUEST_NUMS:
             self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
         else:
-            self.request_selected += ([-1] * REQUEST_NUMS - len(self.request_selected))
-        for index in range(self.request_selected):
+            self.request_selected += [-1] * (REQUEST_NUMS - len(self.request_selected))
+        for index in self.request_selected:
             if index != -1:
                 request_state += [self.REQUESTS[index].origin,
                                   self.REQUESTS[index].destination,
@@ -127,8 +130,8 @@ class RideSharing_Env(object):
         if len(self.request_selected) > REQUEST_NUMS:
             self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
         else:
-            self.request_selected += ([-1] * REQUEST_NUMS - len(self.request_selected))
-        for index in range(self.request_selected):
+            self.request_selected += [-1] * (REQUEST_NUMS - len(self.request_selected))
+        for index in self.request_selected:
             if index != -1:
                 request_state += [self.REQUESTS[index].origin,
                                   self.REQUESTS[index].destination,

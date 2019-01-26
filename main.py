@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import initial
 
 if __name__ == "__main__":
+    set_value('SESS', tf.Session())
     DATA = read_request_data('trip_data/filtered_yellow_tripdata_2018-06.csv')
     isTrain = True
     print(N_WORKERS)
@@ -38,12 +39,11 @@ if __name__ == "__main__":
             i_name = 'w_%i' % i
             workers.append(Worker(i_name, global_AC))
 
-    saver = tf.train.Saver(max_to_keep=1)
-    set_value('SESS', tf.Session())
     set_value('COORD', tf.train.Coordinator())
     COORD = get_value('COORD')
     SESS = get_value('SESS')
     SESS.run(tf.global_variables_initializer())
+    saver = tf.train.Saver(max_to_keep=1)
 
     if isTrain:
         if OUTPUT_GRAPH:

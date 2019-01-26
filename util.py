@@ -40,7 +40,11 @@ class Vehicle(object):
             self.serving = 0
         current_hour = int(current_time / 60)
         travel_time = get_value('travel_time')
-        if drive_time - self.loc_time >= travel_time[current_hour][self.location][self.route[0]]:
+        t_time = travel_time[current_hour][self.location][self.route[0]]
+        if travel_time[current_hour][self.location][self.route[0]] == 0:
+            t_hour = current_hour - 1 if current_hour > 0 else 23
+            t_time = travel_time[t_hour][self.location][self.route[0]]
+        if drive_time - self.loc_time >= t_time:
             self.location = self.route[0]
             self.route.pop(0)
         REQUESTS = get_value('REQUESTS')

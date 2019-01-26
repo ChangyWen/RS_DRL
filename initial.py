@@ -82,4 +82,4 @@ def initialize():
         set_value('VEHICLES', VEHICLES)
     return request
     ### Reduce to N and M
-initialize()
+# initialize()

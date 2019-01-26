@@ -23,6 +23,7 @@ class RideSharing_Env(object):
         self.time = 0
         self.request_selected = []
         self.request_all = copy.deepcopy(get_value('request_all'))
+
         self.REQUESTS = copy.deepcopy(get_value('REQUESTS'))
         self.VEHICLES = copy.deepcopy(get_value('VEHICLES'))
 
@@ -50,25 +51,29 @@ class RideSharing_Env(object):
             self.REQUESTS[self.request_selected[re]].served = 1
             self.VEHICLES[ve].update_route()
         self.request_selected = []
+        self.vehicle = []
         request_state = []
         vehicle_state = []
         self.time += 1
+        step_time = 0 if self.time == 1440 else self.time
+        for ve in self.vehicle:
+            self.VEHICLES[ve].step(step_time)
         if self.time == 1440:
             done = True
             info = None
-            return [0] * (REQUEST_NUMS * 3), reward, done, info
+            return a, [0] * (REQUEST_NUMS * 3 + VEHICLES_NUMS * 2 + 2), reward, done, info
         for grid in self.request_all[self.day][self.time].keys():
             self.request_selected += self.request_all[self.day][self.time][grid]
-        if self.day > 1 and self.time < 30:
-            for grid in self.request_all[self.day-1].keys():
-                for time in range(1440 + self.time - 30, 1440):
+        if self.day > 1 and self.time < 20:
+            # for grid in self.request_all[self.day-1].keys():
+                for time in range(1440 + self.time - 20, 1440):
                     for grid in self.request_all[self.day-1][time].keys():
                         self.request_selected += self.request_all[self.day-1][time][grid]
         else:
-            for grid in self.request_all[self.day].keys():
-                for time in range(self.time - 30, self.time):
-                    for grid in self.request_all[self.day-1][time].keys():
-                        self.request_selected += self.request_all[self.day-1][time][grid]
+            # for grid in self.request_all[self.day].keys():
+                for time in range(self.time - 20, self.time):
+                    for grid in self.request_all[self.day][time].keys():
+                        self.request_selected += self.request_all[self.day][time][grid]
         if len(self.request_selected) > REQUEST_NUMS:
             self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
         else:
@@ -85,7 +90,7 @@ class RideSharing_Env(object):
         '''
         for i in range(len(self.VEHICLES)):
             if (self.VEHICLES[i].stop_time < self.VEHICLES[i].start_time and self.VEHICLES[i].stop_time >= self.time) \
-                    or (self.VEHICLES[i].start_time <= self.time and self.VEHICLES[i].stop_time >= self.time):
+                    or (self.VEHICLES[i].start_time < self.VEHICLES[i].stop_time and (self.VEHICLES[i].start_time <= self.time and self.VEHICLES[i].stop_time >= self.time)):
                 if self.VEHICLES[i].load < self.VEHICLES[i].cap:
                     self.VEHICLES[i].serving = 1
                     self.vehicle.append(i)
@@ -106,6 +111,7 @@ class RideSharing_Env(object):
         self.day = day
         self.time = 0
         self.request_selected = []
+        self.vehicle = []
         request_state = []
         vehicle_state = []
         '''
@@ -114,8 +120,8 @@ class RideSharing_Env(object):
         for grid in self.request_all[day][0].keys():
             self.request_selected += self.request_all[day][0][grid]
         if self.day > 1:
-            for grid in self.request_all[day-1].keys():
-                for time in range(1410, 1440):
+            # for grid in self.request_all[day-1].keys():
+                for time in range(1420, 1440):
                     for grid in self.request_all[day-1][time].keys():
                         self.request_selected += self.request_all[day-1][time][grid]
         if len(self.request_selected) > REQUEST_NUMS:

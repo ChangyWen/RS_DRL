@@ -13,9 +13,9 @@ LOG_DIR = './network_log'
 GLOBAL_NET_SCOPE = 'Global_Net'
 ### A_BOUND = [low, high] ###
 A_BOUND = []
-MAX_DETOUR_TIME = 30
+MAX_DETOUR_TIME = 25
 GRID_NUMS = 265
-REQUEST_NUMS = 80000
+REQUEST_NUMS = 3000
 VEHICLES_NUMS = 10000 # 13,586
 
 global_dict = {'SESS':None,

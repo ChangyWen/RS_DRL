@@ -34,6 +34,7 @@ if __name__ == "__main__":
         global_AC = AcNet(GLOBAL_NET_SCOPE)
         workers = []
         for i in range(N_WORKERS):
+            print('%i worker:' % i)
             i_name = 'w_%i' % i
             workers.append(Worker(i_name, global_AC))
 
@@ -51,9 +52,12 @@ if __name__ == "__main__":
             tf.summary.FileWriter(LOG_DIR, SESS.graph)
 
         worker_threads = []
+        i = 1
         for worker in workers:
             job = lambda: worker.work()
             t = threading.Thread(target=job)
+            print('worker %i appended...' % i)
+            i += 1
             t.start()
             worker_threads.append(t)
         print('all worker begin')

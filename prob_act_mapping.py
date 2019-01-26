@@ -15,7 +15,7 @@ def cal_profit(REQUESTS, VEHICLES, request_selected, vehicle, current_time):
         for j in range(len(request_selected)):
             ve = vehicle[i]
             re = request_selected[j]
-            if travel_time[current_time][VEHICLES[ve].location][REQUESTS[re].origin] < MAX_DETOUR_TIME:
+            if travel_time[current_time][VEHICLES[ve].location][REQUESTS[re].origin] < MAX_DETOUR_TIME and REQUESTS[re].count <= VEHICLES[ve].cap - VEHICLES[ve].load:
                 cost = fare[VEHICLES[ve].location][REQUESTS[re].origin] * 0.1
                 fee = fare[REQUESTS[re].origin][REQUESTS[re].destination]
                 profit_matrix[i][j] = (fee - cost) if fee > cost else 0
@@ -32,7 +32,7 @@ def KM_mapping(action, REQUESTS, VEHICLES, request_selected, vehicle, current_ti
     #             1,2,3,4,
     #                 90,5,1,DISALLOWED]
     profit_matrix = cal_profit(REQUESTS, VEHICLES, request_selected, vehicle, current_time)
-    km_matrix = profit_matrix * action
+    km_matrix = profit_matrix * action.reshape([VEHICLES_NUMS,REQUEST_NUMS])
     km_weights = make_cost_matrix(km_matrix, lambda item: (maxsize - item) if item != 0 else DISALLOWED)
     # matrix = np.array(prob_weights)
     # matrix = np.reshape(matrix, [VEHICLES_NUMS, REQUEST_NUMS])

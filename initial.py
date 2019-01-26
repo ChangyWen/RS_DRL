@@ -32,6 +32,16 @@ def initialize():
     with open('request_dict/request_dict_2018-06.pkl', 'rb') as request_file:
         request = pickle.load(request_file)
         set_value('request_all', request)
+        # max_ = 0
+        # for key1 in request.keys():
+        #     for key2 in request[key1].keys():
+        #         len_ = 0
+        #         for key3 in request[key1][key2].keys():
+        #             len_ += len(request[key1][key2][key3])
+        #         if max_ < len_:
+        #             max_ = len_
+        #         print('%i day '%key1,'%i time:' % key2, ':', len_)
+        # print('max:', max_)
         REQUESTS = {}
         DATA = get_value('DATA')
         for key1 in request.keys():
@@ -72,4 +82,4 @@ def initialize():
         set_value('VEHICLES', VEHICLES)
     return request
     ### Reduce to N and M
-# initialize()
+initialize()

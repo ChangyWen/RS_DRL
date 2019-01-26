@@ -34,9 +34,13 @@ class Vehicle(object):
         self.drop_off_slot = []
 
     def step(self, current_time):
+        drive_time = 1440 if current_time == 0 else 0
+        if (self.stop_time < self.start_time and self.stop_time < current_time) \
+                or (self.stop_time > self.start_time and (current_time < self.start_time or current_time > self.stop_time)):
+            self.serving = 0
         current_hour = int(current_time / 60)
         travel_time = get_value('travel_time')
-        if current_time - self.loc_time >= travel_time[current_hour][self.location][self.route[0]]:
+        if drive_time - self.loc_time >= travel_time[current_hour][self.location][self.route[0]]:
             self.location = self.route[0]
             self.route.pop(0)
         REQUESTS = get_value('REQUESTS')

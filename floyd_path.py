@@ -36,7 +36,7 @@ def plan_route(loc, re_to_pick, isEmpty, onboard):
             return_route += get_route(loc, origin)
             return_route.pop(-1)
             return_route += get_route(origin, destination)
-            return return_route
+            return return_route.pop(0)
         else:
             destination.append(REQUESTS[onboard[0]].destination)
             destination.append(REQUESTS[re].destination)
@@ -60,7 +60,7 @@ def plan_route(loc, re_to_pick, isEmpty, onboard):
             return_route += get_route(temp_route[0], temp_route[1])
             return_route.pop(-1)
             return_route += get_route(temp_route[1], temp_route[2])
-            return return_route
+            return return_route.pop(0)
     if len(re_to_pick) > 1:
         for re in re_to_pick:
             origin.append(REQUESTS[re].origin)
@@ -89,7 +89,7 @@ def plan_route(loc, re_to_pick, isEmpty, onboard):
         return_route += get_route(temp_route[1], temp_route[2])
         return_route.pop(-1)
         return_route += get_route(temp_route[2], temp_route[3])
-        return  return_route
+        return  return_route.pop(0)
 
 
 

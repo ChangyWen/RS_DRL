@@ -5,16 +5,16 @@ import multiprocessing
 import tensorflow as tf
 from global_parameters import VEHICLES_NUMS, REQUEST_NUMS
 
-N_WORKERS = multiprocessing.cpu_count()
+N_WORKERS = 2 # multiprocessing.cpu_count()
 
 ### The time_step = 5 mins ###
-TIME_STEP = 5
+TIME_STEP = 1
 
 ### Maximum steps in one episode ###
-MAX_EP_STEP = 24 * 60 / TIME_STEP
+MAX_EP_STEP = int(24 * 60 / TIME_STEP)
 
 ### Maximum learning episode ###
-MAX_GLOBAL_EP = 30
+MAX_GLOBAL_EP = 20
 
 ### The #iteration in local_net before push_operation ###
 UPDATE_GLOBAL_ITER = 10
@@ -41,7 +41,7 @@ N_A = VEHICLES_NUMS * REQUEST_NUMS
 ### initialization of weights in network ###
 W_INIT = tf.truncated_normal_initializer(0., .1)
 
-UNIT_A = 256
-UNIT_C = 128
+UNIT_A = 128
+UNIT_C = 64
 
 N_Rider = None ## ?

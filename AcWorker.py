@@ -29,8 +29,10 @@ class Worker(object):
         COORD = get_value('COORD')
         total_step = 1  ### local_net step counter
         buffer_s, buffer_a, buffer_r = [], [], []
+        day = 1
         while not COORD.should_stop() and GLOBAL_EP < MAX_GLOBAL_EP:
-            s = self.env.reset()
+            s = self.env.reset(day)
+            day += 1
             ep_r = 0 ### episode reward in local_net
             for ep_t in range(MAX_EP_STEP):
                 a_temp = self.AC.choose_action(s)  # ???? 可以加强动作的特征
@@ -56,6 +58,7 @@ class Worker(object):
                     feed_dict = {self.AC.s: buffer_s,
                                  self.AC.a_his: buffer_a,
                                  self.AC.v_target: buffer_v_target}
+                    print('worker_name:',self.name, 'update')
                     self.AC.update_global(feed_dict)
                     buffer_s, buffer_a, buffer_r = [], [], []
                     self.AC.pull_global()

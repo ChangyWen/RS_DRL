@@ -8,6 +8,7 @@ from global_parameters import VEHICLES_NUMS, REQUEST_NUMS, get_value, MAX_DETOUR
 
 
 def cal_profit(REQUESTS, VEHICLES, request_selected, vehicle, current_time):
+    current_hour = int(current_time / 60)
     profit_matrix = np.zeros(shape=[VEHICLES_NUMS, REQUEST_NUMS]) # N * M
     travel_time = get_value('travel_time')
     fare = get_value('fare')
@@ -15,7 +16,9 @@ def cal_profit(REQUESTS, VEHICLES, request_selected, vehicle, current_time):
         for j in range(len(request_selected)):
             ve = vehicle[i]
             re = request_selected[j]
-            if travel_time[current_time][VEHICLES[ve].location][REQUESTS[re].origin] < MAX_DETOUR_TIME and REQUESTS[re].count <= VEHICLES[ve].cap - VEHICLES[ve].load:
+            if re == -1:
+                continue
+            if travel_time[current_hour][VEHICLES[ve].location][REQUESTS[re].origin] < MAX_DETOUR_TIME and REQUESTS[re].count <= VEHICLES[ve].cap - VEHICLES[ve].load:
                 cost = fare[VEHICLES[ve].location][REQUESTS[re].origin] * 0.1
                 fee = fare[REQUESTS[re].origin][REQUESTS[re].destination]
                 profit_matrix[i][j] = (fee - cost) if fee > cost else 0

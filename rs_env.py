@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import initial
+
 import random
 import copy
 from global_parameters import *
@@ -78,6 +78,7 @@ class RideSharing_Env(object):
                     for grid in self.request_all[self.day][time].keys():
                         self.request_selected += self.request_all[self.day][time][grid]
         if len(self.request_selected) > REQUEST_NUMS:
+            random.seed(10)
             self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
         else:
             self.request_selected += [-1] * (REQUEST_NUMS - len(self.request_selected))
@@ -98,10 +99,12 @@ class RideSharing_Env(object):
                     self.VEHICLES[i].serving = 1
                     self.vehicle.append(i)
                     vehicle_state += [self.VEHICLES[i].location, self.VEHICLES[i].cap - self.VEHICLES[i].load]
+                else:
+                    vehicle_state += [0, 0]
             else:
                 vehicle_state += [0, 0]
         state_ = np.concatenate(([self.day], [0], request_state, vehicle_state))
-        done = False if self.time < 1439 else True
+        done = False if self.time < 1440 else True
         info = None
         return a, state_, reward, done, info
 
@@ -128,6 +131,7 @@ class RideSharing_Env(object):
                     for grid in self.request_all[day-1][time].keys():
                         self.request_selected += self.request_all[day-1][time][grid]
         if len(self.request_selected) > REQUEST_NUMS:
+            random.seed(10)
             self.request_selected = random.sample(self.request_selected, REQUEST_NUMS)
         else:
             self.request_selected += [-1] * (REQUEST_NUMS - len(self.request_selected))
@@ -147,6 +151,8 @@ class RideSharing_Env(object):
                     self.VEHICLES[i].serving = 1
                     self.vehicle.append(i)
                     vehicle_state += [self.VEHICLES[i].location, self.VEHICLES[i].cap - self.VEHICLES[i].load]
+                else:
+                    vehicle_state += [0, 0]
             else:
                 vehicle_state += [0, 0]
         state = np.concatenate(([self.day], [0], request_state, vehicle_state))

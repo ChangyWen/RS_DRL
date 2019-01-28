@@ -24,13 +24,15 @@ class Worker(object):
         The job of the the Workers
         '''
         SESS = get_value('SESS')
-        GLOBAL_RUNNING_R = get_value('GlOBAL_RUNNING_R')
+        # GLOBAL_RUNNING_R = get_value('GlOBAL_RUNNING_R')
         GLOBAL_EP = get_value('GLOBAL_EP')
         COORD = get_value('COORD')
         total_step = 1  ### local_net step counter
         buffer_s, buffer_a, buffer_r = [], [], []
         day = 1
         while not COORD.should_stop() and GLOBAL_EP < MAX_GLOBAL_EP:
+            GLOBAL_RUNNING_R = get_value('GlOBAL_RUNNING_R')
+            GLOBAL_EP = get_value('GLOBAL_EP')
             s = self.env.reset(day)
             day += 1
             ep_r = 0 ### episode reward in local_net
@@ -47,7 +49,7 @@ class Worker(object):
                         v_s_ = 0 ### termial state
                     else:
                         v_s_ = SESS.run(self.AC.v,
-                                        feed_dict={self.AC.s: s_})
+                                        feed_dict={self.AC.s: s_[np.newaxis, :]})
                     buffer_v_target = []
                     for r in buffer_r[::-1]:
                         v_s_ = r + GAMMA * v_s_
@@ -72,4 +74,6 @@ class Worker(object):
                         GLOBAL_RUNNING_R.append(EWA_BETA * GLOBAL_RUNNING_R[-1] + (1 - EWA_BETA) * ep_r)
                         print(self.name, 'Ep:', GLOBAL_EP, '| Ep_r: %i' % GLOBAL_RUNNING_R[-1])
                     GLOBAL_EP += 1
+                    set_value('GLOBAL_EP', GLOBAL_EP)
+                    set_value('GLOBAL_RUNNING_R', GLOBAL_RUNNING_R)
                     break

@@ -115,7 +115,7 @@ class AcNet(object):
         :param s: state
         :return: action
         '''
-        action = self.SESS.run(self.a_prob, feed_dict={self.s: s})
+        action = self.SESS.run(self.a_prob, feed_dict={self.s: s[np.newaxis, :]})
         return action
 
     def pull_global(self):
